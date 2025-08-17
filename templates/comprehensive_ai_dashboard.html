@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive AI Analysis Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/theme.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .dark-gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        
+        .dark-glass {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        
+        .ai-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .ai-button:hover::before {
+            left: 100%;
+        }
+        
+        .ai-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            border-radius: 16px;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen dashboard-insight">
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo"></div>
+                <div>
+                    <div class="font-semibold">BizzMate</div>
+                    <div style="font-size:15px; color:#64748b;">AI & Analytics</div>
+                </div>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-title">Dashboards</div>
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/ai-dashboard-new">AI Dashboard</a>
+                <a class="nav-link" href="/dashboard">ML Dashboard</a>
+                <a class="nav-link active" href="/comprehensive-dashboard">Comprehensive</a>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-title">Account</div>
+                <a class="nav-link" href="/profile">Profile</a>
+            </div>
+        </aside>
+        <main>
+            <div class="topbar">
+                <div class="flex items-center gap-2">
+                    <span style="font-weight:600;">Comprehensive AI Analysis</span>
+                </div>
+                <div class="right">
+                    <button class="btn btn-primary" type="button" onclick="runComprehensiveAnalysis()">Run Analysis</button>
+                </div>
+            </div>
+            <div class="content">
+        <!-- Header Section -->
+        <div class="text-center mb-12 slide-in">
+            <div class="inline-flex items-center space-x-3 mb-6">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center"></div>
+                <div class="text-left">
+                    <h2 class="text-4xl font-bold mb-2">Comprehensive AI Analysis</h2>
+                    <p class="text-lg text-gray-700">Upload Once, Get All AI Insights Automatically</p>
+                </div>
+            </div>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Upload your data and let AI automatically analyze everything - business intelligence, trends, recommendations, and reports - all in one comprehensive analysis.
+            </p>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="dark-glass rounded-2xl p-8 mb-8 slide-in" style="animation-delay: 0.1s;">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-white mb-4">Comprehensive AI Analysis</h3>
+                <p class="text-gray-300 mb-6">Your file has been uploaded! Ready for comprehensive AI analysis.</p>
+                
+                <div id="file-info" class="mb-6">
+                    <div class="feature-card rounded-xl p-6">
+                        <div class="flex items-center justify-center mb-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mr-4"></div>
+                            <div class="text-left">
+                                <h4 class="text-white font-semibold">File Ready for Analysis</h4>
+                                <p class="text-gray-300 text-sm">Your data is uploaded and ready for comprehensive AI analysis</p>
+                            </div>
+                        </div>
+                        <div id="file-details" class="text-gray-300 text-sm">
+                            <p><strong>Status:</strong> <span class="text-green-400">Ready for Analysis</span></p>
+                            <p><strong>Action:</strong> Click the button below to start comprehensive AI analysis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="runComprehensiveAnalysis()" id="analyzeBtn" class="ai-button px-12 py-4 rounded-xl text-white font-semibold text-lg">Start Comprehensive AI Analysis</button>
+
+                <div id="upload-status" class="hidden"></div>
+            </div>
+        </div>
+
+        <!-- Analysis Progress -->
+        <div id="analysis-progress" class="hidden dark-glass rounded-2xl p-8 mb-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-white mb-4">AI Analysis in Progress</h3>
+                <p class="text-gray-300 mb-6">Running comprehensive AI analysis on your data...</p>
+                
+                <div class="w-full bg-gray-700 rounded-full h-4 mb-4">
+                    <div id="progress-bar" class="progress-bar h-4 rounded-full" style="width: 0%"></div>
+                </div>
+                
+                <div id="progress-text" class="text-white text-lg mb-4">Initializing AI analysis...</div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div class="feature-card rounded-xl p-4">
+                        <div class="flex items-center mb-2">
+                            <div id="step1-icon" class="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center mr-3"></div>
+                            <span class="text-white">Business Intelligence</span>
+                        </div>
+                    </div>
+                    <div class="feature-card rounded-xl p-4">
+                        <div class="flex items-center mb-2">
+                            <div id="step2-icon" class="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center mr-3"></div>
+                            <span class="text-white">AI Analysis</span>
+                        </div>
+                    </div>
+                    <div class="feature-card rounded-xl p-4">
+                        <div class="flex items-center mb-2">
+                            <div id="step3-icon" class="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center mr-3"></div>
+                            <span class="text-white">Recommendations</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden">
+            <div class="dark-glass rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-white mb-6">Comprehensive AI Analysis Results</h3>
+                <div id="results-content" class="text-gray-300">
+                    Loading results...
+                </div>
+            </div>
+        </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Comprehensive Analysis - works with already uploaded file
+        async function runComprehensiveAnalysis() {
+            // Show progress section
+            document.getElementById('analysis-progress').classList.remove('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+            
+            // Update progress
+            updateProgress(10, 'Initializing AI analysis...');
+            updateStep(1, 'running');
+            
+            try {
+                updateProgress(20, 'Running Business Intelligence...');
+                
+                const response = await fetch('/comprehensive_ai_analysis_existing', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                
+                updateProgress(60, 'Processing AI insights...');
+                updateStep(1, 'completed');
+                updateStep(2, 'running');
+                
+                const data = await response.json();
+                
+                updateProgress(80, 'Finalizing results...');
+                updateStep(2, 'completed');
+                updateStep(3, 'running');
+                
+                if (data.status === 'success') {
+                    updateProgress(100, 'Analysis completed!');
+                    updateStep(3, 'completed');
+                    
+                    // Show results
+                    setTimeout(() => {
+                        document.getElementById('analysis-progress').classList.add('hidden');
+                        document.getElementById('results-section').classList.remove('hidden');
+                        displayResults(data);
+                    }, 1000);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                updateProgress(0, 'Analysis failed');
+                showUploadStatus('error', `Analysis failed: ${error.message}`);
+                document.getElementById('analysis-progress').classList.add('hidden');
+            }
+        }
+
+        function updateProgress(percentage, text) {
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = text;
+        }
+
+        function updateStep(step, status) {
+            const icon = document.getElementById(`step${step}-icon`);
+            if (status === 'running') {
+                icon.className = 'w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-3';
+            } else if (status === 'completed') {
+                icon.className = 'w-6 h-6 bg-green-600 rounded-full flex items-center justify-center mr-3';
+            }
+        }
+
+        function showUploadStatus(type, message) {
+            const statusDiv = document.getElementById('upload-status');
+            const color = type === 'success' ? 'green' : 'red';
+            const icon = '';
+            
+            statusDiv.innerHTML = `
+                <div class="flex items-center justify-center p-4 bg-${color}-500/10 border border-${color}-500/30 rounded-xl">
+                    <span class="text-white">${message}</span>
+                </div>
+            `;
+            statusDiv.classList.remove('hidden');
+        }
+
+        function displayResults(data) {
+            const resultsContent = document.getElementById('results-content');
+            
+            let html = `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="feature-card rounded-xl p-4 text-center">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2"></div>
+                            <h4 class="text-white font-semibold mb-1">Data Quality</h4>
+                            <p class="text-2xl font-bold text-blue-400">${data.analysis_summary.data_quality_score}%</p>
+                        </div>
+                        <div class="feature-card rounded-xl p-4 text-center">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2"></div>
+                            <h4 class="text-white font-semibold mb-1">AI Confidence</h4>
+                            <p class="text-2xl font-bold text-green-400">${data.analysis_summary.ai_confidence_score}%</p>
+                        </div>
+                        <div class="feature-card rounded-xl p-4 text-center">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2"></div>
+                            <h4 class="text-white font-semibold mb-1">Analyses Run</h4>
+                            <p class="text-2xl font-bold text-purple-400">${data.analysis_summary.total_analyses}</p>
+                        </div>
+                        <div class="feature-card rounded-xl p-4 text-center">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2"></div>
+                            <h4 class="text-white font-semibold mb-1">Industries</h4>
+                            <p class="text-2xl font-bold text-orange-400">${data.analysis_summary.industries_analyzed.length}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-semibold text-white">Dataset Information</h4>
+                        <div class="feature-card rounded-xl p-4">
+                            <p><strong>Filename:</strong> ${data.filename}</p>
+                            <p><strong>Total Records:</strong> ${data.data_insights.dataset_info.total_records.toLocaleString()}</p>
+                            <p><strong>Total Columns:</strong> ${data.data_insights.dataset_info.total_columns}</p>
+                            <p><strong>Columns:</strong> ${data.data_insights.dataset_info.columns.join(', ')}</p>
+                        </div>
+                        
+                        <h4 class="text-lg font-semibold text-white">AI Business Analysis</h4>
+                        <div class="feature-card rounded-xl p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 ${data.ai_analysis.status === 'success' ? 'bg-green-500' : 'bg-yellow-500'} rounded-full mr-3"></div>
+                                <span class="text-white font-semibold">${data.ai_analysis.status === 'success' ? 'Real AI Analysis' : 'Demo Analysis'}</span>
+                            </div>
+                            <div class="whitespace-pre-wrap text-sm">${data.ai_analysis.analysis || data.ai_analysis.recommendations}</div>
+                        </div>
+                        
+                        <h4 class="text-lg font-semibold text-white">Executive Summary</h4>
+                        <div class="feature-card rounded-xl p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-4 h-4 ${data.executive_summary.status === 'success' ? 'bg-green-500' : 'bg-yellow-500'} rounded-full mr-3"></div>
+                                <span class="text-white font-semibold">${data.executive_summary.status === 'success' ? 'Real AI Summary' : 'Demo Summary'}</span>
+                            </div>
+                            <div class="whitespace-pre-wrap text-sm">${data.executive_summary.summary || data.executive_summary.recommendations}</div>
+                        </div>
+                        
+                        <h4 class="text-lg font-semibold text-white">Industry Recommendations</h4>
+                        <div class="feature-card rounded-xl p-4">
+                            <div class="space-y-3">
+                                ${Object.entries(data.industry_recommendations).map(([industry, recs]) => `
+                                    <div class="border-b border-gray-600 pb-3 last:border-b-0">
+                                        <h5 class="text-white font-semibold mb-2">${industry}</h5>
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-3 h-3 ${recs.status === 'success' ? 'bg-green-500' : 'bg-yellow-500'} rounded-full mr-2"></div>
+                                            <span class="text-xs text-gray-400">${recs.status === 'success' ? 'Real AI' : 'Demo'}</span>
+                                        </div>
+                                        <div class="whitespace-pre-wrap text-xs max-h-32 overflow-y-auto">${recs.recommendations}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsContent.innerHTML = html;
+        }
+    </script>
+</body>
+</html> 
+</html> 

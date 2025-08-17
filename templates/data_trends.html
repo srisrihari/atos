@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Trends - BizzMate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link href="/static/css/theme.css" rel="stylesheet">
+  <style>
+    .topbar { display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #e5e7eb; background:#fff; }
+    .container { padding:16px; }
+    .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow: var(--shadow); padding:12px; }
+  </style>
+</head>
+<body class="dashboard-insight">
+  <div class="topbar">
+    <div class="font-semibold">Data Trends</div>
+    <div>
+      <a href="/ai-dashboard-new" class="btn btn-primary" role="button">Back</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="card mb-4">
+      <div class="text-sm font-semibold mb-2">Upload CSV</div>
+      <input type="file" id="fileInput" accept=".csv" class="form-control" />
+      <div id="status" class="text-sm text-slate-600 mt-2"></div>
+    </div>
+    <div class="grid grid-cols-12 gap-4">
+      <div class="card col-span-12 lg:col-span-6"><div class="text-sm font-semibold mb-2">Scatter Plot</div><div id="scatter" style="height:360px"></div></div>
+      <div class="card col-span-12 lg:col-span-6"><div class="text-sm font-semibold mb-2">Bar Chart</div><div id="bar" style="height:360px"></div></div>
+      <div class="card col-span-12"><div class="text-sm font-semibold mb-2">Correlation Matrix</div><div id="corr" style="height:420px"></div></div>
+    </div>
+  </div>
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const statusEl = document.getElementById('status');
+    fileInput.addEventListener('change', async (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      if(!file.name.endsWith('.csv')){ statusEl.textContent='Please upload a CSV file.'; return; }
+      const formData = new FormData(); formData.append('file', file);
+      statusEl.textContent='Uploading...';
+      const res = await fetch('/upload', { method:'POST', body: formData });
+      const data = await res.json();
+      if(data.status !== 'success'){ statusEl.textContent='Upload failed: ' + data.message; return; }
+      statusEl.textContent='Uploaded. Preparing visuals...';
+      renderReal();
+    });
+
+    async function renderReal(){
+      try{
+        const r = await fetch('/data_trends_summary');
+        const j = await r.json();
+        if(j.status !== 'success'){ statusEl.textContent = 'Visualization error: ' + j.message; return; }
+
+        // Scatter
+        if(j.plots.scatter){
+          const s=j.plots.scatter;
+          Plotly.newPlot('scatter', [{x:s.x, y:s.y, mode:'markers', marker:{color:'#2563eb', size:7, opacity:.8}}], {margin:{l:40,r:10,t:10,b:40}, xaxis:{title:s.xName}, yaxis:{title:s.yName}});
+        } else { Plotly.purge('scatter'); }
+
+        // Bar
+        if(j.plots.bar){
+          const b=j.plots.bar; Plotly.newPlot('bar', [{x:b.labels, y:b.values, type:'bar', marker:{color:'#10b981'}}], {margin:{l:40,r:10,t:10,b:40}});
+        } else { Plotly.purge('bar'); }
+
+        // Corr
+        if(j.plots.corr){
+          const c=j.plots.corr; Plotly.newPlot('corr', [{z:c.z, type:'heatmap', colorscale:'RdBu', zmin:-1, zmax:1, x:c.labels, y:c.labels}], {margin:{l:40,r:10,t:20,b:40}});
+        } else { Plotly.purge('corr'); }
+
+      }catch(err){ statusEl.textContent='Error: ' + err.message; }
+    }
+  </script>
+</body>
+</html>
+
+

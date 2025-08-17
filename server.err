@@ -1,0 +1,28 @@
+INFO:gemini_ai:Successfully initialized model: gemini-1.5-flash
+INFO:app:Gemini AI initialized successfully
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.80.62.98:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+INFO:gemini_ai:Successfully initialized model: gemini-1.5-flash
+INFO:app:Gemini AI initialized successfully
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 131-003-337
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:26:11] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:26:37] "[33mGET /get_started.html HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:26:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\Asus\\Desktop\\business-AI-Atosshackathon\\ml_processor.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:gemini_ai:Successfully initialized model: gemini-1.5-flash
+INFO:app:Gemini AI initialized successfully
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 131-003-337
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:27:04] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:27:05] "GET /static/css/theme.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:27:10] "GET /ai-dashboard-new HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:27:10] "[36mGET /static/css/theme.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:27:10] "POST /gemini_analysis HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:27:10] "GET /api/calendar/events?month=8&year=2025 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/Aug/2025 22:27:24] "GET /api/news?type=all&limit=30 HTTP/1.1" 200 -

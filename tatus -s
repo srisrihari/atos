@@ -1,0 +1,12 @@
+warning: in the working copy of 'app.py', LF will be replaced by CRLF the next time Git touches it
+__pycache__/ml_processor.cpython-311.pyc
+app.py
+ml_processor.py
+static/css/custom.css
+static/css/style.css
+templates/ai_dashboard.html
+templates/ai_dashboard_new.html
+templates/base.html
+templates/business_dashboard.html
+templates/comprehensive_ai_dashboard.html
+templates/index.html

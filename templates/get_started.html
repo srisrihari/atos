@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Started</title>
+  <link href="/static/css/theme.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --indigo: #080b3f; /* darker base */
+      --purple: #4b00cc; /* deeper purple */
+      --pink: #6f00d6;   /* deep magenta */
+    }
+
+    html, body { height: 100%; }
+    body.landing { margin: 0; }
+
+    .hero {
+      position: relative; height: 100vh; overflow: hidden; color: #fff;
+      background: radial-gradient(1200px 600px at 25% 70%, rgba(90,40,170,0.35), rgba(90,40,170,0) 60%),
+                  linear-gradient(135deg, #040627 0%, var(--indigo) 30%, #17105f 55%, var(--purple) 75%, var(--pink) 100%);
+    }
+
+    /* subtle diagonal light streaks */
+    .streaks {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.22; z-index: 2;
+      background-image:
+        linear-gradient(110deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.2) 2px, rgba(255,255,255,0) 2px),
+        linear-gradient(110deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.15) 2px, rgba(255,255,255,0) 2px);
+      background-size: 100% 100%, 100% 100%;
+      background-position: -20% -10%, 120% 110%;
+      transform: skewX(-10deg);
+      filter: blur(0.5px);
+      animation: streakSlide 14s linear infinite;
+    }
+
+    @keyframes streakSlide {
+      0% { background-position: -30% -20%, 130% 120%; }
+      100% { background-position: 130% 120%, -30% -20%; }
+    }
+
+    /* subtle dark vignette and grain */
+    .vignette { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; opacity: 0.55; z-index: 3;
+      background: radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.35) 100%);
+    }
+    .grain { position: absolute; inset: 0; pointer-events: none; opacity: .22; mix-blend-mode: overlay; z-index: 6;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.35'/></svg>");
+      background-size: cover; animation: grainMove 12s steps(2,end) infinite;
+    }
+    /* BizzMate glow wordmark */
+    .brand-glow { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 5;
+      font-family: 'Monsieur La Doulaise', cursive; white-space: nowrap;
+      font-size: clamp(120px, 32vw, 42vw); line-height: 1; letter-spacing: .14em; word-spacing: .3em;
+      color: rgba(255,255,255,0.22);
+      -webkit-text-stroke: 2px rgba(255,255,255,0.35);
+      text-shadow: 0 0 40px rgba(162,106,255,0.65), 0 0 120px rgba(111,66,193,0.55), 0 0 200px rgba(111,66,193,0.45);
+      filter: blur(.15px) drop-shadow(0 0 20px rgba(162,106,255,0.45));
+      animation: glowPulse 5.5s ease-in-out infinite alternate;
+      pointer-events: none; user-select: none;
+    }
+    @keyframes glowPulse { from { opacity: .8; } to { opacity: 1; text-shadow: 0 0 40px rgba(162,106,255,0.55), 0 0 120px rgba(111,66,193,0.45), 0 0 180px rgba(111,66,193,0.35);} }
+    @keyframes grainMove { 0% { transform: translate(0,0); } 100% { transform: translate(-10px,-8px); } }
+
+    .content {
+      position: relative; z-index: 10; height: 100vh; display: grid;
+      grid-template-columns: 1.1fr 0.9fr; align-items: center; align-content: center;
+      gap: 32px; padding: 0 72px;
+    }
+
+    /* Reveal animations */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; animation: fadeUp .9s ease forwards; }
+    .d1 { animation-delay: .1s; }
+    .d2 { animation-delay: .25s; }
+    .d3 { animation-delay: .4s; }
+    .d4 { animation-delay: .55s; }
+    .d5 { animation-delay: .7s; }
+
+    .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #ffffff; margin-bottom: 16px; }
+    .title { font-weight: 800; line-height: 1.05; font-size: clamp(38px, 6.2vw, 86px); margin: 0 0 16px; color: #ffffff; white-space: normal; word-break: normal; }
+    .subtitle { font-size: clamp(14px, 1.3vw, 18px); color: #ffffff; max-width: 680px; margin-bottom: 24px; }
+    .cta { display: inline-flex; align-items: center; gap: 10px; margin-top: 8px; opacity: 0; transform: scale(0.9); }
+    .pop-in { animation: pop .7s cubic-bezier(.22,.8,.22,1) forwards; }
+    @keyframes pop { 0% { opacity: 0; transform: scale(0.85);} 60% { opacity: 1; transform: scale(1.06);} 100% { opacity: 1; transform: scale(1);} }
+    /* Landing CTA styling to match reference pill */
+    .hero .btn-primary {
+      background: var(--orange) !important; color: #ffffff !important;
+      border-radius: 999px !important; padding: 10px 22px !important;
+      box-shadow: 0 10px 24px rgba(234,88,12,0.35); font-weight: 700;
+      text-decoration: none !important; border: none !important; display: inline-flex; align-items: center;
+    }
+    .hero .btn-primary:hover, .hero .btn-primary:focus, .hero .btn-primary:visited { text-decoration: none !important; box-shadow: 0 14px 28px rgba(234,88,12,0.45); transform: translateY(-1px); outline: none; }
+    .btn-primary .arrow::after { content: '\2192'; margin-left: 8px; }
+
+    .quote { font-style: italic; color: #ffffff; font-size: clamp(14px, 1.4vw, 20px); }
+    .cite { display: block; margin-top: 6px; font-size: 12px; color: rgba(255,255,255,0.85); }
+
+    @media (max-width: 900px){ .content { grid-template-columns: 1fr; padding: 48px 24px; } }
+  </style>
+</head>
+<body class="landing">
+  <div class="hero">
+    <div class="brand-glow">BizzMate</div>
+    <div class="streaks"></div>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+    <div class="content">
+      <div>
+        <div class="eyebrow reveal d1">Welcome to the future</div>
+        <h1 class="title typing" data-text="Transform Your\nData Into\nDecision"></h1>
+        <p class="subtitle reveal d3">Every great journey begins with a single step. Today is the day you turn your vision into something extraordinary.</p>
+        <div class="cta">
+          <a href="/ai-dashboard-new" class="btn btn-primary arrow" role="button">Get Started</a>
+        </div>
+      </div>
+      <div>
+        <p class="quote reveal d5">"The way to get started is to quit talking and begin doing."<span class="cite">— Walt Disney</span></p>
+      </div>
+    </div>
+  </div>
+  <style>
+    /* smoother letter fade-up typing */
+    .title .char { opacity: 0; transform: translateY(12px); display: inline-block; transition: opacity .22s ease, transform .22s ease; }
+    .title .line { display:block; white-space: nowrap; }
+    .title .char.show { opacity: 1; transform: translateY(0); }
+    .caret { display:inline-block; width:2px; height:1.05em; background:#fff; margin-left:4px; vertical-align:-0.12em; animation: blink 1s step-end infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const titleEl = document.querySelector('.title.typing');
+      if(!titleEl) return;
+      const rawAttr = (titleEl.dataset.text || titleEl.textContent || '').trim();
+      // Normalize: handle real newlines, escaped \n, and pipe '|' as line separators
+      const normalized = rawAttr
+        .replace(/\r\n|\r/g, '\n')
+        .replace(/\\n/g, '\n')
+        .replace(/\|/g, '\n');
+      const lines = normalized.split('\n');
+      titleEl.textContent = '';
+
+      const frag = document.createDocumentFragment();
+      const chars = [];
+      const lineNodes = [];
+
+      lines.forEach((lineText, lineIdx) => {
+        const lineSpan = document.createElement('span');
+        lineSpan.className = 'line';
+        const lineChars = [];
+        for (const ch of lineText) {
+          const span = document.createElement('span');
+          span.className = 'char';
+          span.textContent = ch;
+          lineSpan.appendChild(span);
+          chars.push(span);
+          lineChars.push(span);
+        }
+        frag.appendChild(lineSpan);
+        lineNodes.push({lineSpan, lineChars});
+      });
+
+      const caret = document.createElement('span');
+      caret.className = 'caret';
+      // place caret at end of last line initially
+      lineNodes[lineNodes.length - 1].lineSpan.appendChild(caret);
+      titleEl.appendChild(frag);
+
+      const stepMs = 110; // slow & smooth
+      const total = chars.length;
+      const midpoint = Math.floor(total * 0.5);
+      const cta = document.querySelector('.cta');
+
+      chars.forEach((span, i) => {
+        setTimeout(() => {
+          span.classList.add('show');
+          // move caret after this span
+          span.after(caret);
+          if (i === midpoint && cta) cta.classList.add('pop-in');
+          if (i === total - 1) setTimeout(() => caret.remove(), 400);
+        }, i * stepMs);
+      });
+    });
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Intelligence Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/theme.css" rel="stylesheet">
+    <!-- Explicit font include for Upload CSV button -->
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+NSW:wght@600&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .dark-glass {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        
+        .dark-gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        
+        .ai-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .ai-button:hover::before {
+            left: 100%;
+        }
+        
+        .ai-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body class="min-h-screen dashboard-insight">
+    <!-- Clean white background (removed decorative blobs) -->
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo"></div>
+                <div>
+                    <div class="font-semibold">BizzMate</div>
+                    <div style="font-size:15px; color:#64748b;">AI & Analytics</div>
+                </div>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-title">Dashboards</div>
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link active" href="/ai-dashboard-new">AI Dashboard</a>
+                <a class="nav-link" href="/dashboard">ML Dashboard</a>
+                <a class="nav-link" href="/comprehensive-dashboard">Comprehensive</a>
+                <a class="nav-link" href="/data-trends">Data Visualization</a>
+            </div>
+            <div class="nav-group">
+                <div class="nav-group-title">Account</div>
+                <a class="nav-link" href="/profile">Profile</a>
+            </div>
+        </aside>
+        <main>
+            <div class="topbar">
+                <div class="flex items-center gap-2">
+                    <span style="font-weight:600;">AI Business Intelligence</span>
+                </div>
+                <div class="right">
+                    <button class="btn btn-primary" type="button" onclick="runAIAnalysis()">Run Analysis</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="dashboard-header mb-3">
+                    <div class="title">Dashboard</div>
+                    <div class="search"><input type="text" placeholder="Search analytics"></div>
+                    <button class="btn btn-primary" type="button" onclick="runAIAnalysis()">Run Analysis</button>
+                </div>
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-8 space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="card padded" onclick="window.location.href='/data-trends'" style="cursor:pointer">
+                                <div class="text-sm text-gray-500">Data Trends</div>
+                                <div class="text-xs text-gray-600 mb-2">Visualize your metrics</div>
+                                <div class="card-soft h-24 rounded-md"></div>
+                                <div class="mt-2 text-xs text-gray-500">Report 1/5 • 20% completed</div>
+                            </div>
+                            <div class="card padded">
+                                <div class="text-sm text-gray-500">AI Insights</div>
+                                <div class="text-xs text-gray-600 mb-2">Upload your CSV to analyze</div>
+                                <div class="card-soft h-24 rounded-md"></div>
+                                <div class="mt-2 text-xs text-gray-500">Use the Upload CSV button at the bottom-left</div>
+                            </div>
+                            <div class="col-span-2 card padded" id="news-carousel-card" style="min-height: 220px;">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="text-sm text-gray-700 font-medium">Trending News</div>
+                                        <div class="text-xs text-gray-500">Business • India • World</div>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <select id="news-type" class="border rounded px-2 py-1 text-xs">
+                                            <option value="all">All</option>
+                                            <option value="business">Business</option>
+                                            <option value="india">India</option>
+                                            <option value="world">World</option>
+                                        </select>
+                                    <button id="news-prev" class="btn btn-muted" type="button">Prev</button>
+                                    <button id="news-next" class="btn btn-muted" type="button">Next</button>
+                                    </div>
+                                </div>
+                                <div id="news-slot" class="mt-3">
+                                    <div class="card-soft rounded-md p-3 text-xs text-gray-600">Loading...</div>
+                                </div>
+                                <div id="news-dots" class="news-dots"></div>
+                            </div>
+                        </div>
+                        <div class="calendar" id="calendar-card" style="width:100%;">
+                            <div class="flex items-center justify-between p-3 border-b border-gray-200">
+                                <div>
+                                    <div class="text-sm text-gray-700 font-medium" id="cal-month-label">Calendar</div>
+                                    <div class="text-xs text-gray-500" id="cal-range"></div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button id="prev-month" class="btn btn-muted" type="button">Prev</button>
+                                    <button id="next-month" class="btn btn-muted" type="button">Next</button>
+                                    <button id="add-event-btn" class="btn btn-primary" type="button">+ Add</button>
+                                </div>
+                            </div>
+                            <div class="grid p-2">
+                                <div class="grid grid-cols-7 gap-1 text-xs text-gray-500 px-1 mb-1">
+                                    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                                </div>
+                                <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+                            </div>
+                        </div>
+
+                        <!-- Add Event Modal -->
+                        <div id="event-modal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+                            <div class="bg-white rounded-md shadow-lg w-full max-w-md p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="font-semibold">Add Schedule</div>
+                                    <button id="close-modal" class="text-gray-500">✕</button>
+                                </div>
+                                <div class="space-y-2">
+                                    <div>
+                                        <label class="text-xs text-gray-600">Title</label>
+                                        <input id="ev-title" class="w-full border rounded px-2 py-1 text-sm" placeholder="e.g., Team standup" />
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-xs text-gray-600">Start date</label>
+                                            <input id="ev-start" type="date" class="w-full border rounded px-2 py-1 text-sm" />
+                                        </div>
+                                        <div>
+                                            <label class="text-xs text-gray-600">End date</label>
+                                            <input id="ev-end" type="date" class="w-full border rounded px-2 py-1 text-sm" />
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-xs text-gray-600">Color</label>
+                                            <input id="ev-color" type="color" value="#2563eb" class="w-full h-8 border rounded" />
+                                        </div>
+                                        <div>
+                                            <label class="text-xs text-gray-600">Description (optional)</label>
+                                            <input id="ev-desc" class="w-full border rounded px-2 py-1 text-sm" placeholder="Optional" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 flex justify-end gap-2">
+                                    <button id="cancel-ev" class="btn btn-muted" type="button">Cancel</button>
+                                    <button id="save-ev" class="btn btn-primary" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-4 space-y-4">
+                        <div class="card padded">
+                            <div class="text-sm font-semibold mb-2">Current Analysis</div>
+                            <div class="card-soft h-40 rounded-md flex items-center justify-center text-xs text-gray-500">Map/Video preview</div>
+                        </div>
+                        <div class="card padded">
+                            <div class="text-sm font-semibold mb-2">Metrics Overview</div>
+                            <div id="metrics-note" class="text-xs text-gray-600 mb-2">Upload a CSV to see KPIs (mean, median, std, min/max, growth). If columns like revenue/sales/customer exist, business KPIs are shown.</div>
+                            <div class="metric-list" id="metrics-list"></div>
+                        </div>
+                        <div class="card padded">
+                            <div class="text-sm font-semibold mb-2">Notifications</div>
+                            <div class="text-xs text-gray-600">Your analysis report is ready. For detailed insights, contact our support team.</div>
+                        </div>
+                        <div id="ai-status" class="card padded"></div>
+                    </div>
+                </div>
+                <div id="loading-overlay" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div class="card padded text-center max-w-md">
+                        <div class="w-16 h-16 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+                        <div class="text-sm">Analyzing...</div>
+                    </div>
+                </div>
+                <!-- Floating Upload CSV button at bottom-left -->
+                <button id="csv-fab" class="btn btn-outline-white fab-left-bottom" type="button">Upload CSV</button>
+                <input id="csv-input" type="file" accept=".csv" class="hidden" />
+            </div>
+
+    <script>
+        // Check AI status and init calendar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAIStatus();
+            initCalendar();
+            initNews();
+            initCsvUpload();
+        });
+
+        // Calendar logic
+        let calYear, calMonth; // month: 0-11
+        function initCalendar() {
+            const today = new Date();
+            calYear = today.getFullYear();
+            calMonth = today.getMonth();
+            bindCalendarControls();
+            renderCalendar();
+        }
+
+        function bindCalendarControls() {
+            document.getElementById('prev-month').addEventListener('click', () => {
+                calMonth -= 1;
+                if (calMonth < 0) { calMonth = 11; calYear -= 1; }
+                renderCalendar();
+            });
+            document.getElementById('next-month').addEventListener('click', () => {
+                calMonth += 1;
+                if (calMonth > 11) { calMonth = 0; calYear += 1; }
+                renderCalendar();
+            });
+            document.getElementById('add-event-btn').addEventListener('click', openEventModal);
+            document.getElementById('close-modal').addEventListener('click', closeEventModal);
+            document.getElementById('cancel-ev').addEventListener('click', closeEventModal);
+            document.getElementById('save-ev').addEventListener('click', saveEvent);
+        }
+
+        function monthLabel(y, m){
+            return new Date(y, m, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+        }
+
+        async function renderCalendar() {
+            const label = document.getElementById('cal-month-label');
+            label.textContent = `Calendar — ${monthLabel(calYear, calMonth)}`;
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            // First day of month and days in month
+            const first = new Date(calYear, calMonth, 1);
+            const last = new Date(calYear, calMonth + 1, 0);
+            const startWeekday = first.getDay();
+            const daysInMonth = last.getDate();
+
+            // Fetch events for month
+            let events = [];
+            try {
+                const res = await fetch(`/api/calendar/events?month=${calMonth+1}&year=${calYear}`);
+                const data = await res.json();
+                if (data.status === 'success') {
+                    events = data.events || [];
+                    document.getElementById('cal-range').textContent = `${data.range.start} — ${data.range.end}`;
+                }
+            } catch (e) {}
+
+            // Helper to list events for day
+            function eventsForDay(day){
+                const d = new Date(calYear, calMonth, day);
+                const ds = d.toISOString().slice(0,10);
+                return events.filter(ev => {
+                    const s = ev.start_date;
+                    const e = ev.end_date || ev.start_date;
+                    return s <= ds && e >= ds;
+                });
+            }
+
+            // Empty cells before month starts
+            for (let i=0;i<startWeekday;i++) {
+                const div = document.createElement('div');
+                div.className = 'cell';
+                grid.appendChild(div);
+            }
+            // Day cells
+            for (let d=1; d<=daysInMonth; d++){
+                const cell = document.createElement('div');
+                cell.className = 'cell relative';
+                cell.innerHTML = `<div class="text-xs text-gray-500">${d}</div>`;
+
+                const evs = eventsForDay(d).slice(0,3);
+                evs.forEach(ev => {
+                    const tag = document.createElement('div');
+                    tag.className = 'mt-1 text-[10px] px-1 py-[2px] rounded text-white truncate';
+                    tag.style.backgroundColor = ev.color || '#2563eb';
+                    tag.title = ev.description || ev.title;
+                    tag.textContent = ev.title;
+                    cell.appendChild(tag);
+                });
+                if (eventsForDay(d).length > 3) {
+                    const more = document.createElement('div');
+                    more.className = 'mt-1 text-[10px] text-gray-600';
+                    more.textContent = `+${eventsForDay(d).length - 3} more`;
+                    cell.appendChild(more);
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+
+        function openEventModal(){
+            const m = document.getElementById('event-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            // defaults
+            const today = new Date().toISOString().slice(0,10);
+            document.getElementById('ev-start').value = today;
+            document.getElementById('ev-end').value = today;
+            document.getElementById('ev-title').value = '';
+            document.getElementById('ev-desc').value = '';
+            document.getElementById('ev-color').value = '#2563eb';
+        }
+
+        function closeEventModal(){
+            const m = document.getElementById('event-modal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        async function saveEvent(){
+            const title = document.getElementById('ev-title').value.trim();
+            const start_date = document.getElementById('ev-start').value;
+            const end_date = document.getElementById('ev-end').value || start_date;
+            const color = document.getElementById('ev-color').value || '#2563eb';
+            const description = document.getElementById('ev-desc').value || '';
+            if (!title || !start_date) { alert('Please provide title and start date'); return; }
+            try {
+                const res = await fetch('/api/calendar/event', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title, start_date, end_date, color, description })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    closeEventModal();
+                    renderCalendar();
+                } else {
+                    alert(data.message || 'Failed to save');
+                }
+            } catch (e) {
+                alert('Network error');
+            }
+        }
+
+        // News carousel
+        let newsItems = []; let newsIndex = 0; let newsType = 'all';
+        function initNews(){
+            const sel = document.getElementById('news-type');
+            document.getElementById('news-prev').addEventListener('click', () => moveNews(-1));
+            document.getElementById('news-next').addEventListener('click', () => moveNews(1));
+            sel.addEventListener('change', () => { newsType = sel.value; fetchNews(); });
+            fetchNews();
+        }
+
+        // CSV Upload and metrics overview binding
+        function initCsvUpload(){
+            const input = document.getElementById('csv-input');
+            if (!input) return;
+            input.addEventListener('change', async (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const form = new FormData();
+                form.append('file', file);
+                try {
+                    const res = await fetch('/upload', { method: 'POST', body: form });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        // After upload, refresh metrics overview panel on the right
+                        refreshMetricsOverview();
+                        // Also refresh AI status to use uploaded data
+                        checkAIStatus();
+                        // Turn the button green to indicate success
+                        const fabBtn = document.getElementById('csv-fab');
+                        if (fabBtn) {
+                            fabBtn.classList.remove('btn-outline-white');
+                            fabBtn.classList.add('btn-outline-green');
+                            fabBtn.textContent = 'CSV Uploaded';
+                        }
+                    } else {
+                        alert(data.message || 'Upload failed');
+                    }
+                } catch (err) {
+                    alert('Network error while uploading');
+                }
+            });
+            const fab = document.getElementById('csv-fab');
+            if (fab) {
+                fab.addEventListener('click', () => input.click());
+            }
+        }
+        async function refreshMetricsOverview(){
+            try {
+                // Use existing dashboard endpoint to compute real metrics from uploaded data
+                const res = await fetch('/dashboard_data');
+                const data = await res.json();
+                if (data.status === 'success') {
+                    const list = document.getElementById('metrics-list');
+                    const note = document.getElementById('metrics-note');
+                    if (!list) return;
+                    const cards = data.dashboard_data && data.dashboard_data.kpi_cards ? data.dashboard_data.kpi_cards : [];
+                    if (cards.length === 0) {
+                        list.innerHTML = '';
+                        if (note) note.textContent = 'No numeric columns detected yet. Upload a CSV with numeric fields to see KPIs.';
+                        return;
+                    }
+                    // Render up to 5 KPIs
+                    const selected = cards.slice(0, 5);
+                    list.innerHTML = selected.map(c => `
+                        <div class=\"metric-item\"><div>${c.title}</div><span class=\"pill\">${c.value}</span></div>
+                    `).join('');
+                    if (note) note.textContent = 'KPIs computed from your uploaded dataset.';
+                }
+            } catch (e) {
+                // ignore
+            }
+        }
+        async function fetchNews(){
+            const slot = document.getElementById('news-slot');
+            slot.innerHTML = '<div class="card-soft rounded-md p-3 text-xs text-gray-600">Loading...</div>';
+            try {
+                const params = new URLSearchParams({ type: newsType, limit: '30' });
+                const headers = {};
+                const keyForWorldIndia = '869f166202c84a0aaa526c11af548bfb';
+                if (newsType === 'world' || newsType === 'india') {
+                    headers['X-NEWS-API-KEY'] = keyForWorldIndia;
+                }
+                const res = await fetch(`/api/news?${params.toString()}`, { headers });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    newsItems = data.items || [];
+                    newsIndex = 0;
+                    renderNews();
+                } else {
+                    slot.innerHTML = '<div class="card-soft rounded-md p-3 text-xs text-gray-600">Failed to load news</div>';
+                }
+            } catch(e){
+                slot.innerHTML = '<div class="card-soft rounded-md p-3 text-xs text-gray-600">Network error</div>';
+            }
+        }
+        function renderNews(){
+            const slot = document.getElementById('news-slot');
+            if (!newsItems.length){
+                slot.innerHTML = '<div class="card-soft rounded-md p-3 text-xs text-gray-600">No items</div>';
+                return;
+            }
+            const n = newsItems[newsIndex];
+            const title = n.title || 'Untitled';
+            const desc = (n.description || '').replace(/<[^>]*>?/gm, '').slice(0, 220);
+            const published = n.published ? new Date(n.published).toLocaleString() : '';
+            const source = n.source || '';
+            const img = n.image ? `<img class=\"news-thumb\" src=\"${n.image}\" alt=\"thumbnail\" onerror=\"this.style.display='none'\">` : '<div class="news-thumb"></div>';
+            slot.innerHTML = `
+                <div class="card-soft rounded-md p-3 news-card">
+                    <div>${img}</div>
+                    <div>
+                        <a href="${n.link}" target="_blank" class="text-base font-semibold text-blue-700" style="text-decoration:none;">${title}</a>
+                        <div class="text-xs text-gray-500 mt-1">${source}${published ? ' • ' + published : ''}</div>
+                        <div class="text-sm text-gray-700 mt-2">${desc}...</div>
+                        <div class="mt-2 text-xs"><a href="${n.link}" target="_blank" class="btn btn-secondary" style="padding:6px 10px; font-size:0.9rem;">Read</a></div>
+                    </div>
+                </div>
+            `;
+            renderNewsDots();
+        }
+        function renderNewsDots(){
+            const dots = document.getElementById('news-dots');
+            dots.innerHTML = '';
+            const count = Math.min(Math.max(newsItems.length, 1), 6);
+            for (let i=0;i<count;i++){
+                const d = document.createElement('div');
+                d.className = 'news-dot' + (i === (newsIndex % count) ? ' active' : '');
+                d.addEventListener('click', () => { newsIndex = i; renderNews(); });
+                dots.appendChild(d);
+            }
+        }
+        function moveNews(delta){
+            if (!newsItems.length) return;
+            newsIndex = (newsIndex + delta + newsItems.length) % newsItems.length;
+            renderNews();
+        }
+
+        function checkAIStatus() {
+            const statusDiv = document.getElementById('ai-status');
+            statusDiv.innerHTML = `
+                <div class="flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-4"></div>
+                    <span class="text-white text-lg">Testing AI Connection...</span>
+                </div>
+            `;
+
+            fetch('/gemini_analysis', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.gemini_analysis.status === 'success') {
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center justify-center">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4"></div>
+                            <span class="text-white text-lg">Real AI Connected! Model: ${data.gemini_analysis.model_used || 'gemini-1.5-flash'}</span>
+                        </div>
+                    `;
+                } else if (data.status === 'success' && data.gemini_analysis.status === 'demo') {
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center justify-center">
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center mr-4"></div>
+                            <span class="text-white text-lg">Rate Limited - Using Data-Specific Analysis</span>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="flex items-center justify-center">
+                            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-4"></div>
+                            <span class="text-white text-lg">Connection Failed - Check API Key</span>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                statusDiv.innerHTML = `
+                    <div class="flex items-center justify-center">
+                        <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-4"></div>
+                        <span class="text-white text-lg">Connection Error - Check Network</span>
+                    </div>
+                `;
+            });
+        }
+
+        function showLoading() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        function showResult(containerId, title, content, isError = false) {
+            const container = document.getElementById(containerId);
+            const statusClass = isError ? 'border-yellow-500' : 'border-green-500';
+            const iconColor = isError ? 'text-yellow-500' : 'text-green-500';
+            
+            container.innerHTML = `
+                <div class="result-card p-6 border-l-4 ${statusClass}">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 ${iconColor} mr-3"></div>
+                        <h4 class="text-lg font-semibold text-white">${title}</h4>
+                    </div>
+                    <div class="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">${content}</div>
+                </div>
+            `;
+            container.classList.remove('hidden');
+        }
+
+        async function runAIAnalysis() {
+            showLoading();
+            try {
+                const response = await fetch('/gemini_analysis', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                const data = await response.json();
+                hideLoading();
+                
+                if (data.status === 'success' && data.gemini_analysis.status === 'success') {
+                    showResult('analysis-result', 'AI Business Analysis (Real AI)', data.gemini_analysis.analysis);
+                } else if (data.status === 'success' && data.gemini_analysis.status === 'demo') {
+                    showResult('analysis-result', 'AI Business Analysis (Data-Specific Demo)', data.gemini_analysis.analysis, true);
+                } else {
+                    showResult('analysis-result', 'Demo Analysis', 
+                        `Strategic Business Analysis:\n\n` +
+                        `• Data Overview: Strong business potential\n` +
+                        `• Key Insights: Positive revenue trends\n` +
+                        `• Recommendations: Focus on growth\n` +
+                        `• Risk Assessment: Monitor market conditions\n` +
+                        `• Growth Opportunities: Digital transformation\n\n` +
+                        `Note: Demo mode - Configure API key for real AI.`, 
+                        true);
+                }
+            } catch (error) {
+                hideLoading();
+                showResult('analysis-result', 'Demo Analysis', 
+                    `Strategic Business Analysis:\n\n` +
+                    `• Data Overview: Strong business potential\n` +
+                    `• Key Insights: Positive revenue trends\n` +
+                    `• Recommendations: Focus on growth\n` +
+                    `• Risk Assessment: Monitor market conditions\n` +
+                    `• Growth Opportunities: Digital transformation\n\n` +
+                    `Note: Demo mode - Configure API key for real AI.`, 
+                    true);
+            }
+        }
+
+        async function getAIRecommendations() {
+            const industry = document.getElementById('industry-select').value;
+            showLoading();
+            try {
+                const response = await fetch('/gemini_recommendations', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({industry_context: industry})
+                });
+                const data = await response.json();
+                hideLoading();
+                
+                if (data.status === 'success' && data.ai_recommendations.status === 'success') {
+                    // Simplify the AI recommendations for easier understanding
+                    const simplifiedRecommendations = simplifyRecommendations(data.ai_recommendations.recommendations, industry);
+                    showResult('recommendations-result', `Simple AI Recommendations (${industry})`, simplifiedRecommendations);
+                } else {
+                    // Use the industry-specific demo recommendations from the backend
+                    showResult('recommendations-result', `Simple Recommendations (${industry})`, 
+                        data.ai_recommendations.recommendations, true);
+                }
+            } catch (error) {
+                hideLoading();
+                // Fallback to industry-specific demo recommendations
+                const fallbackRecommendations = getFallbackRecommendations(industry);
+                showResult('recommendations-result', `Simple Recommendations (${industry})`, 
+                    fallbackRecommendations, true);
+            }
+        }
+
+        function simplifyRecommendations(aiText, industry) {
+            // Extract key points and simplify language
+            let simplified = `SIMPLE BUSINESS RECOMMENDATIONS\n\n`;
+            simplified += `Industry: ${industry}\n\n`;
+            
+            // Look for common patterns in AI text and simplify them
+            if (aiText.includes('data') || aiText.includes('analytics')) {
+                simplified += `What You Should Do:\n`;
+                simplified += `• Use your business data to make smarter decisions\n`;
+                simplified += `• Track what's working and what's not\n`;
+                simplified += `• Listen to your customers and improve their experience\n\n`;
+            }
+            
+            if (aiText.includes('automation') || aiText.includes('technology')) {
+                simplified += `Quick Wins:\n`;
+                simplified += `• Automate repetitive tasks to save time\n`;
+                simplified += `• Use simple tools to track your performance\n`;
+                simplified += `• Make your business processes more efficient\n\n`;
+            }
+            
+            if (aiText.includes('timeline') || aiText.includes('implementation')) {
+                simplified += `Timeline:\n`;
+                simplified += `• Month 1-3: Set up basic tracking and systems\n`;
+                simplified += `• Month 4-6: Start making changes based on data\n`;
+                simplified += `• Month 7-12: Keep improving and optimizing\n\n`;
+            }
+            
+            simplified += `Key Takeaway:\n`;
+            simplified += `These recommendations are based on your actual business data and are designed to be easy to understand and implement. Start with the quick wins and gradually work on the bigger changes.\n\n`;
+            simplified += `Note: This is a simplified version of AI recommendations in easy-to-understand language.`;
+            
+            return simplified;
+        }
+
+        function getFallbackRecommendations(industry) {
+            const recommendations = {
+                'General Business': `SIMPLE BUSINESS RECOMMENDATIONS
+
+Industry: General Business
+
+What You Should Do:
+• Start using your business data to make better decisions
+• Focus on making your customers happy and satisfied
+• Use technology to improve how your business works
+• Keep track of your money and expenses carefully
+
+Quick Wins:
+• Automate simple, repetitive tasks to save time
+• Keep track of what your competitors are doing
+• Use your resources (money, time, people) more efficiently
+• Improve your customer service processes
+
+Timeline:
+• Month 1-3: Set up basic systems and start tracking data
+• Month 4-6: Start making changes based on what you learn
+• Month 7-12: Keep improving and optimizing your business
+
+Key Takeaway:
+Start small, focus on what works, and keep improving step by step.
+
+Note: These are simple, easy-to-understand recommendations based on your data.`,
+
+                'Retail': `SIMPLE BUSINESS RECOMMENDATIONS
+
+Industry: Retail
+
+What You Should Do:
+• Track which products sell best and focus on them
+• Improve your store layout to make shopping easier
+• Use customer data to offer better deals and promotions
+• Train your staff to provide excellent customer service
+
+Quick Wins:
+• Put popular items at eye level in your store
+• Offer loyalty programs to keep customers coming back
+• Use social media to promote your products
+• Keep your store clean and well-organized
+
+Timeline:
+• Month 1-3: Analyze your sales data and identify top products
+• Month 4-6: Implement store improvements and staff training
+• Month 7-12: Launch marketing campaigns and loyalty programs
+
+Key Takeaway:
+Happy customers who find what they need quickly will keep coming back to your store.
+
+Note: These are simple, easy-to-understand recommendations for retail businesses.`,
+
+                'Manufacturing': `SIMPLE BUSINESS RECOMMENDATIONS
+
+Industry: Manufacturing
+
+What You Should Do:
+• Track your production efficiency and find ways to improve it
+• Reduce waste and use materials more efficiently
+• Keep your machines well-maintained to avoid breakdowns
+• Train your workers to work safely and efficiently
+
+Quick Wins:
+• Organize your workspace to reduce time spent looking for tools
+• Create checklists for quality control
+• Use simple tracking systems to monitor production
+• Regular maintenance schedules for all equipment
+
+Timeline:
+• Month 1-3: Analyze current production processes and identify bottlenecks
+• Month 4-6: Implement efficiency improvements and safety training
+• Month 7-12: Optimize supply chain and quality control systems
+
+Key Takeaway:
+Efficient production with quality control leads to better products and higher profits.
+
+Note: These are simple, easy-to-understand recommendations for manufacturing businesses.`,
+
+                'Finance': `SIMPLE BUSINESS RECOMMENDATIONS
+
+Industry: Finance
+
+What You Should Do:
+• Use data to make smarter investment decisions
+• Improve your risk management processes
+• Focus on customer trust and security
+• Keep up with new financial technologies
+
+Quick Wins:
+• Automate simple financial calculations and reports
+• Improve your customer service response times
+• Use data to identify profitable customer segments
+• Regular security updates and compliance checks
+
+Timeline:
+• Month 1-3: Analyze financial data and identify opportunities
+• Month 4-6: Implement new technologies and security measures
+• Month 7-12: Launch new services and improve customer experience
+
+Key Takeaway:
+Trust, security, and smart use of data are the keys to success in finance.
+
+Note: These are simple, easy-to-understand recommendations for financial businesses.`
+            };
+            
+            return recommendations[industry] || recommendations['General Business'];
+        }
+    </script>
+</body>
+</html>
+</html>
