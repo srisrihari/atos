@@ -95,8 +95,12 @@
 <body class="min-h-screen dashboard-insight">
     <!-- Clean white background (removed decorative blobs) -->
 
-    <div class="app-shell">
-        <aside class="sidebar">
+    <div class="app-shell relative">
+        <!-- Sidebar Toggle Button for Mobile -->
+        <button id="sidebar-toggle" class="fixed top-3 left-3 z-50 bg-white/80 rounded-full p-2 shadow-lg sm:hidden" aria-label="Open sidebar">
+            <i class="fas fa-bars text-xl text-gray-700"></i>
+        </button>
+        <aside id="sidebar" class="sidebar transition-transform duration-300 fixed sm:static top-0 left-0 h-full z-40 bg-white sm:bg-transparent w-64 sm:w-auto transform -translate-x-full sm:translate-x-0">
             <div class="brand">
                 <div class="logo"></div>
                 <div>
@@ -118,6 +122,42 @@
             </div>
         </aside>
         <main>
+    <!-- Overlay for closing sidebar on mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/30 z-30 hidden sm:hidden" tabindex="-1"></div>
+        <script>
+        // Sidebar toggle logic
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
+        }
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        }
+        sidebarToggle.addEventListener('click', openSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+        // Close sidebar on navigation (for anchor tags)
+        sidebar.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                if (window.innerWidth < 640) closeSidebar();
+            });
+        });
+        // Hide sidebar by default on mobile
+        if (window.innerWidth < 640) {
+            sidebar.classList.add('-translate-x-full');
+        }
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 640) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+        </script>
             <div class="topbar flex flex-col sm:flex-row items-center justify-between gap-2 px-2 py-3">
                 <div class="flex items-center gap-2">
                     <span class="font-semibold text-lg sm:text-xl">AI Business Intelligence</span>
@@ -130,7 +170,6 @@
                 <div class="dashboard-header mb-3">
                     <div class="title">Dashboard</div>
                     <div class="search"><input type="text" placeholder="Search analytics"></div>
-                    <button class="btn btn-primary" type="button" onclick="runAIAnalysis()">Run Analysis</button>
                 </div>
                 <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12 lg:col-span-8 space-y-4">
