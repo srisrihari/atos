@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
 from flask import Flask, request, jsonify, render_template, send_file, abort
@@ -8,6 +9,7 @@ from scipy.stats import gaussian_kde
 import tempfile
 import json
 import logging
+load_dotenv()
 import traceback
 from sklearn.datasets import load_iris, load_diabetes, load_breast_cancer, load_wine, fetch_california_housing
 from ml_processor import MLProcessor, MODEL_ALIASES
@@ -24,6 +26,8 @@ import uuid
 import math
 import numpy as np
 import pandas as pd
+from dotenv import load_dotenv
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -69,9 +73,9 @@ business_intelligence = None
 business_reporter = None
 gemini_ai = None
 
-# Initialize Gemini AI if API key is available
+# Initialize Gemini AI using environment variable (recommended)
 try:
-    gemini_ai = GeminiAI("AIzaSyCLxCR0_HOX-abVRWhWdIlRqujwxEaupvk")
+    gemini_ai = GeminiAI()
     logger.info("Gemini AI initialized successfully")
 except Exception as e:
     logger.warning(f"Gemini AI not available: {str(e)}")
@@ -2039,7 +2043,7 @@ def comprehensive_ai_analysis():
             data = pd.read_csv(filepath)
             
             # Initialize AI and Business Intelligence
-            gemini = GeminiAI("AIzaSyCLxCR0_HOX-abVRWhWdIlRqujwxEaupvk")
+            gemini = GeminiAI()
             bi = BusinessIntelligence(data)
             
             # Run comprehensive analysis
@@ -2204,63 +2208,59 @@ def comprehensive_ai_analysis_existing():
             # Fallback: Get the latest uploaded file from directory
             upload_folder = app.config['UPLOAD_FOLDER']
             csv_files = [f for f in os.listdir(upload_folder) if f.endswith('.csv')]
-            
             if not csv_files:
                 return jsonify({'status': 'error', 'message': 'No CSV files found. Please upload a file first.'})
-            
             # Use the most recent file by modification time
             csv_files_with_time = []
             for f in csv_files:
                 file_path = os.path.join(upload_folder, f)
                 mod_time = os.path.getmtime(file_path)
                 csv_files_with_time.append((f, mod_time))
-            
             # Sort by modification time (most recent first)
             csv_files_with_time.sort(key=lambda x: x[1], reverse=True)
             filename = csv_files_with_time[0][0]
             filepath = os.path.join(upload_folder, filename)
             print(f"📁 Using most recently modified file: {filename}")
-        
+
         # Load data
         data = pd.read_csv(filepath)
         print(f"📊 Loaded data: {len(data)} records, {len(data.columns)} columns")
-        
+
         # Initialize AI and Business Intelligence
-        gemini = GeminiAI("AIzaSyCLxCR0_HOX-abVRWhWdIlRqujwxEaupvk")
+        gemini = GeminiAI()
         bi = BusinessIntelligence(data)
-        
+
         # Run comprehensive analysis
         print("🤖 Starting Comprehensive AI Analysis...")
-        
+
         # 1. Business Intelligence Analysis
         print("📊 Running Business Intelligence...")
         bi.analyze_business_metrics()
-        
+
         # 2. AI Business Analysis
         print("🧠 Running AI Business Analysis...")
         ai_analysis = gemini.analyze_business_data(bi.insights['data_overview'], bi.insights)
-        
+
         # 3. AI Executive Summary
         print("📋 Generating AI Executive Summary...")
         executive_summary = gemini.generate_executive_summary(bi.insights['data_overview'], bi.insights.get('business_metrics', {}))
-        
+
         # 4. AI Trend Predictions
         print("🔮 Generating AI Trend Predictions...")
         trend_predictions = gemini.predict_business_trends(bi.insights['data_overview'], bi.insights.get('business_metrics', {}))
-        
+
         # 5. AI Recommendations for different industries
         print("💡 Generating AI Recommendations...")
         industry_recommendations = {}
         industries = ['General Business', 'Retail', 'Manufacturing', 'Finance']
-        
         for industry in industries:
             recommendations = gemini.generate_ai_recommendations(bi.insights, industry)
             industry_recommendations[industry] = recommendations
-        
+
         # 6. AI Report Generation
         print("📄 Generating AI Report...")
         ai_report = gemini.create_ai_powered_report('executive', bi.insights['data_overview'], bi.insights)
-        
+
         # 7. Data Insights Summary
         print("📈 Creating Data Insights Summary...")
         data_insights = {
@@ -2278,7 +2278,7 @@ def comprehensive_ai_analysis_existing():
                 'categorical_summary': {col: data[col].value_counts().to_dict() for col in data.select_dtypes(include=['object']).columns} if data.select_dtypes(include=['object']).shape[1] > 0 else {}
             }
         }
-        
+
         # Compile comprehensive results
         comprehensive_results = {
             'status': 'success',
@@ -2306,10 +2306,10 @@ def comprehensive_ai_analysis_existing():
                 'ai_confidence_score': _calculate_ai_confidence_score(ai_analysis, executive_summary, trend_predictions)
             }
         }
-        
+
         print("✅ Comprehensive AI Analysis Completed!")
         return jsonify(comprehensive_results)
-        
+
     except Exception as e:
         print(f"❌ Error in comprehensive AI analysis: {str(e)}")
         import traceback
