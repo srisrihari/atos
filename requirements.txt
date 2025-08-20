@@ -1,17 +1,24 @@
-flask>=2.0.0
-pandas>=1.3.0
+
+# Core scientific/build dependencies (must be first for pmdarima)
 numpy>=1.20.0
-scikit-learn>=0.24.0
-plotly>=5.0.0
+Cython>=0.29
+setuptools>=38.6.0
 scipy>=1.7.0
+pandas>=1.3.0
+scikit-learn>=0.24.0
+statsmodels>=0.13.0
+joblib>=1.1.0
+
+# Main app dependencies
+flask>=2.0.0
 werkzeug>=2.0.0
+plotly>=5.0.0
 xgboost>=1.5.0
 lightgbm>=3.3.0
 catboost>=1.0.0
 optuna>=2.10.0
 shap>=0.40.0
 imbalanced-learn>=0.8.0
-joblib>=1.1.0
 
 # Google Generative AI (Gemini)
 google-generativeai>=0.3.0
@@ -39,7 +46,6 @@ psycopg2-binary>=2.9.0
 # Authentication & Security
 flask-login>=0.5.0
 flask-wtf>=1.0.0
-werkzeug>=2.0.0
 bcrypt>=3.2.0
 
 # Background Tasks
@@ -47,12 +53,10 @@ celery>=5.2.0
 redis>=4.0.0
 
 # Time Series Analysis
-statsmodels>=0.13.0
 prophet>=1.1.0
 pmdarima>=1.8.0
 
 # Business Metrics & Analytics
-scipy>=1.7.0
 seaborn>=0.11.0
 matplotlib>=3.5.0
 
