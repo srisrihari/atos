@@ -118,23 +118,23 @@
             </div>
         </aside>
         <main>
-            <div class="topbar">
+            <div class="topbar flex flex-col sm:flex-row items-center justify-between gap-2 px-2 py-3">
                 <div class="flex items-center gap-2">
-                    <span style="font-weight:600;">AI Business Intelligence</span>
+                    <span class="font-semibold text-lg sm:text-xl">AI Business Intelligence</span>
                 </div>
-                <div class="right">
-                    <button class="btn btn-primary" type="button" onclick="runAIAnalysis()">Run Analysis</button>
+                <div class="right mt-2 sm:mt-0">
+                    <button class="btn btn-primary w-full sm:w-auto" type="button" onclick="runAIAnalysis()">Run Analysis</button>
                 </div>
             </div>
-            <div class="content">
+            <div class="content px-2 sm:px-6 max-w-full">
                 <div class="dashboard-header mb-3">
                     <div class="title">Dashboard</div>
                     <div class="search"><input type="text" placeholder="Search analytics"></div>
                     <button class="btn btn-primary" type="button" onclick="runAIAnalysis()">Run Analysis</button>
                 </div>
                 <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-8 space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-12 lg:col-span-8 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="card padded" onclick="window.location.href='/data-trends'" style="cursor:pointer">
                                 <div class="text-sm text-gray-500">Data Trends</div>
                                 <div class="text-xs text-gray-600 mb-2">Visualize your metrics</div>
@@ -231,14 +231,14 @@
                         </div>
                     </div>
                     <div class="col-span-4 space-y-4">
-                        <div class="card padded">
+                        <div class="card padded overflow-x-auto">
                             <div class="text-sm font-semibold mb-2">Current Analysis</div>
                             <div class="card-soft h-40 rounded-md flex items-center justify-center text-xs text-gray-500">Map/Video preview</div>
                         </div>
                         <div class="card padded">
                             <div class="text-sm font-semibold mb-2">Metrics Overview</div>
                             <div id="metrics-note" class="text-xs text-gray-600 mb-2">Upload a CSV to see KPIs (mean, median, std, min/max, growth). If columns like revenue/sales/customer exist, business KPIs are shown.</div>
-                            <div class="metric-list" id="metrics-list"></div>
+                            <div class="metric-list overflow-x-auto" id="metrics-list"></div>
                         </div>
                         <div class="card padded">
                             <div class="text-sm font-semibold mb-2">Notifications</div>

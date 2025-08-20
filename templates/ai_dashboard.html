@@ -158,15 +158,15 @@
             </div>
         </aside>
         <main>
-            <div class="topbar">
+            <div class="topbar flex flex-col sm:flex-row items-center justify-between gap-2 px-2 py-3">
                 <div class="flex items-center gap-2">
-                    <span style="font-weight:600;">AI Business Intelligence</span>
+                    <span class="font-semibold text-lg sm:text-xl">AI Business Intelligence</span>
                 </div>
-                <div class="right">
-                    <button class="btn btn-primary" type="button" onclick="runAllAIFeatures()">Run All</button>
+                <div class="right mt-2 sm:mt-0">
+                    <button class="btn btn-primary w-full sm:w-auto" type="button" onclick="runAllAIFeatures()">Run All</button>
                 </div>
             </div>
-            <div class="content">
+            <div class="content px-2 sm:px-6 max-w-full">
         <!-- Header Section -->
         <div class="text-center mb-12 slide-in">
             <div class="inline-flex items-center space-x-3 mb-6">
@@ -199,7 +199,7 @@
         </div>
 
         <!-- AI Features Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12">
             <!-- AI Business Analysis -->
             <div class="feature-card rounded-2xl p-8 slide-in" style="animation-delay: 0.1s;">
                 <div class="flex items-center mb-6">
@@ -284,7 +284,7 @@
         </div>
 
         <!-- Loading Overlay -->
-        <div id="loading-overlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-2">
             <div class="glass rounded-2xl p-8 text-center max-w-md">
                 <div class="relative">
                     <div class="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-6"></div>

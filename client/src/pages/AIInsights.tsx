@@ -58,7 +58,7 @@ export function AIInsights() {
   ];
 
   return (
-    <div className="h-full bg-gray-50 dark:bg-gray-900">
+  <div className="h-full bg-gray-50 dark:bg-gray-900 px-2 sm:px-4 md:px-8">
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700">
         <nav className="flex space-x-8 px-6" aria-label="Tabs">
@@ -80,8 +80,8 @@ export function AIInsights() {
       </div>
 
       {/* Content */}
-      <div className="p-6">
-        <div className="grid grid-cols-2 gap-6">
+      <div className="p-2 sm:p-4 md:p-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* AI Recommendations */}
           <div className="space-y-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -159,7 +159,7 @@ export function AIInsights() {
           <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Analytics
           </h2>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             {analyticsCharts.map((chart) => (
               <div
                 key={chart.id}

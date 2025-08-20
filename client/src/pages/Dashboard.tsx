@@ -80,8 +80,8 @@ export function Dashboard() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+  <div className="space-y-6 px-2 sm:px-4 md:px-8">
+  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Welcome to InsightIQ</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -100,7 +100,7 @@ export function Dashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  <div className="grid grid-cols-1 gap-5 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {kpis.map((kpi) => (
           <div 
             key={kpi.id}
@@ -143,9 +143,9 @@ export function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-6">
+  <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-4 sm:p-6">
         <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+  <div className="grid grid-cols-2 gap-4 xs:grid-cols-3 sm:grid-cols-4">
           {quickActions.map((action) => (
             <Link
               key={action.name}
@@ -167,7 +167,7 @@ export function Dashboard() {
       </div>
 
       {/* Tabbed Content */}
-      <div className="bg-white dark:bg-gray-900 shadow rounded-lg">
+  <div className="bg-white dark:bg-gray-900 shadow rounded-lg mt-4">
         <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="-mb-px flex" aria-label="Tabs">
             {tabs.map((tab) => (
@@ -186,7 +186,7 @@ export function Dashboard() {
             ))}
           </nav>
         </div>
-        <div className="p-4 sm:p-6">
+  <div className="p-2 sm:p-4 md:p-6">
           {activeTab === 'overview' && (
             <div className="space-y-4">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white">Quick Insights</h3>
